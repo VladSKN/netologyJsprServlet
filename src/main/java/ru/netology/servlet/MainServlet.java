@@ -26,7 +26,6 @@ public class MainServlet extends HttpServlet {
         try {
             final var path = req.getRequestURI();
             final var method = req.getMethod();
-
             // primitive routing
             if (method.equals("GET") && path.equals(PATH_POSTS)) {
                 postController.all(resp);
