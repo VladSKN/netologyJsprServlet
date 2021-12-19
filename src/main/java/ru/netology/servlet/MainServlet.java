@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 public class MainServlet extends HttpServlet {
     private PostController postController;
     private final String PATH_POSTS = "/api/posts";
+    private final String PATH_WITH_NUMBER_POST = PATH_POSTS + "/\\d+";
 
     @Override
     public void init() {
@@ -32,9 +33,9 @@ public class MainServlet extends HttpServlet {
                 return;
             }
 
-            if (method.equals("GET") && path.matches(PATH_POSTS + "\\d+")) {
+            if (method.equals("GET") && path.matches(PATH_WITH_NUMBER_POST)) {
                 // easy way
-                final var id = Long.parseLong(path.substring(path.lastIndexOf("/")));
+                final var id = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
                 postController.getById(id, resp);
                 return;
             }
@@ -42,9 +43,9 @@ public class MainServlet extends HttpServlet {
                 postController.save(req.getReader(), resp);
                 return;
             }
-            if (method.equals("DELETE") && path.matches(PATH_POSTS + "\\d+")) {
+            if (method.equals("DELETE") && path.matches(PATH_WITH_NUMBER_POST)) {
                 // easy way
-                final var id = Long.parseLong(path.substring(path.lastIndexOf("/")));
+                final long id = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
                 postController.removeById(id, resp);
                 return;
             }
