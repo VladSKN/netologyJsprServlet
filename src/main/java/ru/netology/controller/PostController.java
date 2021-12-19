@@ -28,7 +28,6 @@ public class PostController {
     final var gson = new Gson();
     final var data = service.getById(id);
     response.getWriter().print(gson.toJson(data));
-    // TODO: deserialize request & serialize response
   }
 
   public void save(Reader body, HttpServletResponse response) throws IOException {
@@ -44,7 +43,6 @@ public class PostController {
     final var gson = new Gson();
     final var data = service.getById(id);
     service.removeById(id);
-    response.getWriter().print(gson.toJson(data));
-    // TODO: deserialize request & serialize response
+    response.getWriter().print(gson.toJson(data).concat("DELETE"));
   }
 }

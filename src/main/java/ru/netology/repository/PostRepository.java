@@ -31,6 +31,6 @@ public class PostRepository {
     }
 
     public void removeById(long id) {
-        posts.remove(id);
+        posts.remove(id, posts.get(id));
     }
 }
