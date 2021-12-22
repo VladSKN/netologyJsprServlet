@@ -12,7 +12,6 @@ public class MainServlet extends HttpServlet {
     private final String PATH_POSTS = "/api/posts";
     private final String PATH_WITH_NUMBER_POST = PATH_POSTS + "/\\d+";
 
-
     @Override
     public void init() {
         final var context = new AnnotationConfigApplicationContext("ru.netology");
