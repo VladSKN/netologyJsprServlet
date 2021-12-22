@@ -22,9 +22,9 @@ public class PostRepository {
     }
 
     public Post save(Post post) {
-        if (post.getId() == 0) {
-            long newId = id.incrementAndGet();
-            new Post(newId, post.getContent());
+        if (post.getId() == id.get()) {
+            new Post(id.get(), post.getContent());
+            id.incrementAndGet();
         }
         posts.put(post.getId(), post);
         return post;
