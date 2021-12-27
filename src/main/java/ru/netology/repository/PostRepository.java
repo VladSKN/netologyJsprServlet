@@ -1,5 +1,6 @@
 package ru.netology.repository;
 
+import ru.netology.exception.NotFoundException;
 import ru.netology.model.Post;
 
 import java.util.*;
@@ -22,11 +23,16 @@ public class PostRepository {
     }
 
     public Post save(Post post) {
-        if (post.getId() == id.get()) {
-            new Post(id.get(), post.getContent());
-            id.incrementAndGet();
+        if (post.getId() == 0) {
+            long newId = id.incrementAndGet();
+            post = new Post(newId, post.getContent());
+            posts.put(post.getId(), post);
         }
-        posts.put(post.getId(), post);
+        if (posts.containsKey(post.getId())) {
+            posts.put(post.getId(), post);
+        } else {
+            throw new NotFoundException();
+        }
         return post;
     }
 
