@@ -27,28 +27,32 @@ public class MainServlet extends HttpServlet {
             final var path = req.getRequestURI();
             final var method = req.getMethod();
             // primitive routing
-            if (method.equals("GET") && path.equals(PATH_POSTS)) {
-                postController.all(resp);
-                return;
-            }
+            try {
+                if (method.equals("GET") && path.equals(PATH_POSTS)) {
+                    postController.all(resp);
+                    return;
+                }
 
-            if (method.equals("GET") && path.matches(PATH_WITH_NUMBER_POST)) {
-                // easy way
-                final var id = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
-                postController.getById(id, resp);
-                return;
+                if (method.equals("GET") && path.matches(PATH_WITH_NUMBER_POST)) {
+                    // easy way
+                    final var id = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
+                    postController.getById(id, resp);
+                    return;
+                }
+                if (method.equals("POST") && path.equals(PATH_POSTS)) {
+                    postController.save(req.getReader(), resp);
+                    return;
+                }
+                if (method.equals("DELETE") && path.matches(PATH_WITH_NUMBER_POST)) {
+                    // easy way
+                    final long id = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
+                    postController.removeById(id, resp);
+                    return;
+                }
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
-            if (method.equals("POST") && path.equals(PATH_POSTS)) {
-                postController.save(req.getReader(), resp);
-                return;
-            }
-            if (method.equals("DELETE") && path.matches(PATH_WITH_NUMBER_POST)) {
-                // easy way
-                final long id = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
-                postController.removeById(id, resp);
-                return;
-            }
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
