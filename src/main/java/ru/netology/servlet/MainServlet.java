@@ -1,12 +1,14 @@
 package ru.netology.servlet;
 
 import ru.netology.controller.PostController;
+import ru.netology.exception.NotFoundException;
 import ru.netology.repository.PostRepository;
 import ru.netology.service.PostService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class MainServlet extends HttpServlet {
     private PostController postController;
@@ -24,14 +26,12 @@ public class MainServlet extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) {
         // если деплоились в root context, то достаточно этого
         try {
-            final var path = req.getRequestURI();
-            final var method = req.getMethod();
-            try {
+                final var path = req.getRequestURI();
+                final var method = req.getMethod();
                 if (method.equals("GET") && path.equals(PATH_POSTS)) {
                     postController.all(resp);
                     return;
                 }
-
                 if (method.equals("GET") && path.matches(PATH_WITH_NUMBER_POST)) {
                     // easy way
                     final var id = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
@@ -49,13 +49,13 @@ public class MainServlet extends HttpServlet {
                     return;
                 }
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            } catch (Exception e) {
-                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (IOException ex) {
+            ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        catch (NotFoundException ex) {
+            ex.printStackTrace();
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 }
-
